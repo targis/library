@@ -1,0 +1,14 @@
+img {
+  max-width: 100%;
+  width: 100%;
+}
+
+/*Scroll to top button*/
+#scrollTop{
+    display:block;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    opacity: 0;
+    transition: opacity .5s ease;
+}

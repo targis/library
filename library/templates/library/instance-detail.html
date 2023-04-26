@@ -1,0 +1,40 @@
+{% extends 'library/base.html' %}
+
+{% block title %}{{ instance.id }}{% endblock %}
+
+{% block header %}
+{{ instance.id }}
+{% endblock %}
+
+{% block main %}
+<div class="row mt-5">
+    <div class="col-2">
+        <img src="{{ instance.book.cover }}" alt="">
+    </div>
+    <div class="col-7 px-3">
+        <a class="link-secondary text-decoration-none" href="{{ instance.book.url }}">
+            <h4>{{ instance.book }}</h4>
+        </a>
+        <hr>
+
+        {% if instance.status == 'a' %}
+        <p>Issue</p>
+        <form action="{% url 'lib:lend-instance' pk=instance.id %}" method="POST">
+            {% csrf_token %}
+            <div class="form-floating y-4" style="max-width: 200px">
+                <input class="form-control" type="date" name="due_back" id="due_back">
+                <label for="due_back">Due back date</label>
+            </div>
+            <div class="my-4">
+                <button type="submit" class="btn btn-outline-dark">Lend</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="col-3">
+
+    </div>
+
+</div>
+{% endblock %}

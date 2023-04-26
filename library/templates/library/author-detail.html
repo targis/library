@@ -1,0 +1,83 @@
+{% extends 'library/base.html' %}
+
+{% block title %}{{ author }}{% endblock %}
+
+{% block header %}
+{{ author }}
+{% endblock %}
+
+{% block main %}
+<div class="row mt-5">
+    <div class="col-2">
+        <img src="{{ author.portrait }}" alt="">
+
+    </div>
+    <div class="col-7 px-3">
+        {% if author.born %}
+        <h6>Date of Birth: </h6>
+        <p>{{ author.born|date:"d.m.Y" }}</p>
+        {% endif %}
+
+        {% if genres %}
+        <p class="genres mt-3">
+
+            <span class="fs-bold">Genres:</span>
+            {% for genre in genres %}
+            <a class="link-dark" href="{{ genre.url }}">{{ genre|lower }}</a>{% if not forloop.last %},{% else %}
+            {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+
+        <div class="books mt-3">
+            {% if books %}
+            <h6>Books</h6>
+            <div class="row row-cols-3 g-3">
+
+                {% for book in books %}
+                <div class="col">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ book.cover }}" alt="{{ book.title }}" class="img-fluid rounded-start">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <a href="{{ book.url }}" class="stretched-link link-dark text-decoration-none">
+                                        <h6 class="card-title">{{ book.title }}</h6>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+        <div class="col-3">
+            {% if comments %}
+            <h5>Comments ({{ author.comments_count }})</h5>
+            {% for comment in comments %}
+            <hr>
+            <p>
+                <span class="fw-bolder">{{ comment.user }}</span>
+                about <a class="link-dark" href="{{ comment.book.url }}">{{ comment.book }}</a>: <br>
+                {{ comment.text }}
+                <br> <span class="fst-italic fw-light"
+                           style="font-size: .8em">{{ comment.created|timesince }} ago</span>
+            </p>
+            {% empty %}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

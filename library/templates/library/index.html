@@ -1,0 +1,41 @@
+{% extends 'library/base.html' %}
+{% load static %}
+{% block title %}Library{% endblock %}
+
+{% block header %}
+Library
+{% endblock %}
+
+{% block main %}
+<div class="row mt-5">
+
+    <div class="col-4 ">
+        <div class="text-center bg-white p-5 position-relative">
+            {# include 'library/icons/book.html' with size=50 #}
+            <img class="w-50 h-50" src="{% static 'library/img/book.png' %}" alt="">
+            <a class="stretched-link " href="{% url 'lib:book-list' %}">
+                <h2>Books ({{ books_count }})</h2>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="text-center bg-white p-5 position-relative">
+             <img class="w-50 h-50" src="{% static 'library/img/writer.png' %}" alt="">
+            <a class="stretched-link link-warning" href="{% url 'lib:author-list' %}">
+                <h2>Authors ({{ authors_count }})</h2>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="text-center bg-white p-5 position-relative">
+            <img class="w-50 h-50" src="{% static 'library/img/genres.png' %}" alt="">
+            <a class="stretched-link link-info" href="{% url 'lib:genre-list' %}">
+                <h2>Genres ({{ genres_count }})</h2>
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'library/base.html' %}
+
+{% block title %}{{ book }}{% endblock %}
+
+{% block header %}
+{{ book }}
+{% endblock %}
+
+{% block main %}
+<div class="row mt-5">
+    <div class="col-2">
+        <img src="{{ book.cover }}" alt="">
+        <div class="genres mt-3"></div>
+        {% for genre in book.genres.all %}
+        <a class="link-dark" href="{{ genre.url }}">{{ genre|lower }}</a>{% if not forloop.last %},{% else %}
+        {% endif %}
+        {% endfor %}
+
+    </div>
+    <div class="col-7 px-3">
+        <h6>Author: </h6>
+        <a class="link-secondary text-decoration-none" href="{{ book.author.url }}">
+            <h4>{{ book.author }}</h4>
+        </a>
+        {% if book.summary %}
+        <div class="my-4">
+            <h6>Summary:</h6>
+            <p>{{ book.summary }}</p>
+        </div>
+        {% endif %}
+
+        {% if book.instances %}
+        <div class="my-4">
+            <h6>Instances:</h6>
+            <table class="table">
+                {% for inst in book.instances.all %}
+                <tr>
+                    <td>
+                        {% if inst.status == "a" %}
+                        {{ inst.get_status_display }}
+                        {% else %}
+                        On loan till <span class="{% if inst.is_expired %}text-danger{% endif %}">{{ inst.due_back }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if inst.status == "o" %}
+                        <button type="button" class="return-btn btn btn-sm btn-outline-dark" data-bs-toggle="modal"
+                                data-bs-target="#returnModal" data-inst="{{ inst.id }}">
+                            Return
+                        </button>
+                        <form id="return-form-{{ inst.id }}" action="{% url 'lib:return-instance' pk=inst.id %}" method="POST">
+                            {% csrf_token %}
+                            <button id="hiddenButton" type="submit" class="btn btn-dark" hidden></button>
+                        </form>
+                        {% else %}
+                        <a class="btn btn-sm btn-outline-dark"
+                           href="{% url 'lib:instance-detail' pk=inst.id %}">Lend</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ inst.id }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-3">
+        <form action="{% url 'lib:add-comment' pk=book.id %}" method="POST">
+            {% csrf_token %}
+            <p class="fs-5">
+                Add a Comment
+            </p>
+            <div class="my-3 form-floating">
+                <input id="userName" class="form-control" type="text" name="user" placeholder="Name" aria-label="Name">
+                <label for="userName">Name</label>
+            </div>
+            <div class="my-3 form-floating">
+                <textarea id="commentText" class="form-control" type="text" name="text" placeholder="Text"
+                          aria-label="Comment Text" style="height: 100px"></textarea>
+                <label for="commentText">Comment's text</label>
+            </div>
+            <div class="my-4">
+                <button type="submit" class="btn btn-outlined-dark">Submit</button>
+            </div>
+        </form>
+
+        <h5>Comments ({{ book.comments.count }})</h5>
+        {% for comment in book.comments.all %}
+        <hr>
+        <p>
+            <span class="fw-bolder">{{ comment.user }}</span>: {{ comment.text }}
+            <br> <span class="fst-italic fw-light">{{ comment.created|timesince }} ago</span>
+        </p>
+
+        {% empty %}
+        <p>No comments here...</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<div id="returnModal" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Return the instance?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outlined-dark" data-bs-dismiss="modal">No</button>
+        <button id="returnButton" class="btn btn-dark">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    var myModal = document.getElementById('returnModal')
+    var myInput = document.getElementById('returnButton')
+    var id = null
+    var btns = document.querySelectorAll('.return-btn')
+
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function(e){
+            id = e.target.dataset.inst
+        })
+    })
+
+    myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+    })
+
+    myInput.addEventListener('click', function(e) {
+        var returnForm = document.getElementById('return-form-' + id)
+        returnForm.submit()
+    })
+
+
+
+
+</script>
+{% endblock %}

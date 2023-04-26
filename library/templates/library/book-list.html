@@ -1,0 +1,35 @@
+{% extends 'library/base.html' %}
+
+{% block title %}Library | Authors{% endblock %}
+
+{% block header %}
+All Books
+{% endblock %}
+
+{% block main %}
+<div class="row mt-5">
+  {% for book in books %}
+  <div class="col-2 mb-3 text-center">
+    <div class="card shadow-sm h-100">
+      <div class="overflow-hidden" style="height: 250px">
+        <img
+          src="{{ book.cover }}"
+          alt="{{ book.title }}"
+          class="card-img-top object-fit-cover"
+        />
+      </div>
+      <div class="card-body">
+        <a class="link-dark text-decoration-none stretched-link" href="{{ book.url }}">
+          <h6>{{ book.title }}</h6>
+        </a>
+        <p class="card-text">
+          {% if book.comments_count %}
+          Comments: {{ book.comments_count }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
