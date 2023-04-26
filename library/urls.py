@@ -4,10 +4,11 @@ from . import views
 app_name = 'lib'
 
 urlpatterns = [
-    path("", views.home, name='home'),
-    path("books/", views.book_list, name='book-list'),
-    path("authors/", views.author_list, name='author-list'),
-    path("genres/", views.genre_list, name='genre-list'),
+    path("", views.HomeTemplateView.as_view(), name='home'),
+    # path("books/", views.book_list, name='book-list'),
+    path("book/list/", views.BookListView.as_view(), name='book-list'),
+    path("author/list", views.AuthorListView.as_view(), name='author-list'),
+    path("genre/list", views.GenreListView.as_view(), name='genre-list'),
     path("book/<int:pk>", views.book_detail, name='book-detail'),
     path("author/<int:pk>", views.author_detail, name='author-detail'),
     path("comment/<int:pk>/add", views.add_comment, name='add-comment'),
