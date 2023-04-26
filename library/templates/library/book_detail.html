@@ -29,7 +29,7 @@
         </div>
         {% endif %}
 
-        {% if book.instances %}
+
         <div class="my-4">
             <h6>Instances:</h6>
             <table class="table">
@@ -61,10 +61,13 @@
                         {{ inst.id }}
                     </td>
                 </tr>
+                {% empty %}
+                <tr>
+                    <td>No instances available for now...</td>
+                </tr>
                 {% endfor %}
             </table>
         </div>
-        {% endif %}
     </div>
 
     <div class="col-3">
@@ -83,7 +86,7 @@
                 <label for="commentText">Comment's text</label>
             </div>
             <div class="my-4">
-                <button type="submit" class="btn btn-outlined-dark">Submit</button>
+                <button type="submit" class="btn btn-outline-dark">Submit</button>
             </div>
         </form>
 
